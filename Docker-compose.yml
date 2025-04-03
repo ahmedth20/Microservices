@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  # Eureka Server
+  eurekaserver:
+    build:
+      context: ./eurkaServer-main  # Chemin relatif
+    ports:
+      - "8761:8761"
+    image: "eurekaimage"
+    environment:
+      - eureka.client.service-url.defaultZone=http://eurekaserver:8761/eureka
+    networks:
+      - eureka-network
+
+  # GestionA Microservice
+  gestionA_ms:
+    build:
+      context: ./ProjetMicroService-Categorie/ProjetMicroService-main  # Chemin relatif pour ton projet
+    ports:
+      - "9090:9090"
+    image: "gestionaimage"
+    environment:
+      - spring.application.name=gestionA
+      - spring.datasource.username=Slouma
+      - spring.datasource.password= # Si pas de mot de passe, laisse vide
+      - spring.datasource.url=jdbc:h2:file:./Database/Data/ProjetMicro
+      - spring.datasource.driver-class-name=org.h2.Driver
+      - spring.jpa.hibernate.ddl-auto=update
+      - server.port=9090
+      - eureka.client.service-url.defaultZone=http://eurekaserver:8761/eureka
+    depends_on:
+      - eurekaserver
+    networks:
+      - eureka-network
+    volumes:
+      - ./Database:/app/Database  # Utilisation de volumes pour persister la base de données
+
+  # API Gateway Microservice
+  gateway_ms:
+    build:
+      context: ./ApiGateway-main/ApiGateway-main  # Chemin relatif
+    ports:
+      - "7000:7000"
+    image: "gatewayimage"
+    environment:
+      - eureka.client.service-url.defaultZone=http://eurekaserver:8761/eureka
+    depends_on:
+      - eurekaserver
+      - gestionA_ms
+    networks:
+      - eureka-network
+
+networks:
+  eureka-network:
+    driver: bridge
