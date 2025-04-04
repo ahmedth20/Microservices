@@ -47,4 +47,11 @@ public class CategorieService {
         }
         return false;
     }
+    public long countCategories() {
+        return categorieRepository.count();
+    }
+    public List<Categorie> findByOriginePays(String originePays) {
+        return categorieRepository.findByOriginePays(originePays);
+    }
+
 }

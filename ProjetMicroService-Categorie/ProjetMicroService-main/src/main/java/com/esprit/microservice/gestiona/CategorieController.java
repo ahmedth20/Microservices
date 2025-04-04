@@ -1,8 +1,13 @@
 package com.esprit.microservice.gestiona;
 
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 @RestController
@@ -47,4 +52,46 @@ public class CategorieController {
         boolean deleted = categorieService.deleteCategorie(id);
         return deleted ? ResponseEntity.ok("Catégorie supprimée avec succès.") : ResponseEntity.notFound().build();
     }
+    @GetMapping("/pays/{pays}")
+    public ResponseEntity<List<Categorie>> getCategoriesByPays(@PathVariable String pays) {
+        List<Categorie> result = categorieService.findByOriginePays(pays);
+        return ResponseEntity.ok(result);
+    }
+    @GetMapping("/export/csv")
+    public void exportCSV(HttpServletResponse response) throws IOException {
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=\"categories.csv\"");
+        List<Categorie> categories = categorieService.getAllCategories();
+
+        PrintWriter writer = response.getWriter();
+        writer.println("ID,Nom,Description,Pays,DateCreation");
+        for (Categorie c : categories) {
+            writer.printf("%d,%s,%s,%s,%s%n",
+                    c.getId(), c.getNom(), c.getDescription(), c.getOriginePays(), c.getDateCreation());
+        }
+        writer.flush();
+    }
+    @GetMapping("/stat/total")
+    public ResponseEntity<Long> getTotalCategories() {
+        return ResponseEntity.ok(categorieService.countCategories());
+    }
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+    @GetMapping("/api/catfact")
+    public ResponseEntity<String> getRandomCatFact() {
+        RestTemplate restTemplate = new RestTemplate();
+        String fact = restTemplate.getForObject("https://catfact.ninja/fact", String.class);
+        return ResponseEntity.ok(fact);
+    }
+    @GetMapping("/api/dogimage")
+    public ResponseEntity<String> getRandomDogImage() {
+        RestTemplate restTemplate = new RestTemplate();
+        String img = restTemplate.getForObject("https://dog.ceo/api/breeds/image/random", String.class);
+        return ResponseEntity.ok(img);
+    }
+
+
+
 }

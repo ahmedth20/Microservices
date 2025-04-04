@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,11 @@ public class Categorie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nom; // Ex: Chien, Chat, Oiseau, Reptile...
+    private String nom;
+    private String description;
+    private String originePays;
+    private LocalDate dateCreation;
+
     @JsonIgnore
     @OneToMany(mappedBy = "categorie", cascade = CascadeType.ALL)
     private List<Animal> animaux;
