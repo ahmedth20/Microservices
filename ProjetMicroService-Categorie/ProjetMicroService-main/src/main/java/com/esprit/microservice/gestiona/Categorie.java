@@ -20,7 +20,8 @@ public class Categorie {
 
     private String nom;
     private String description;
-    private String originePays;
+    @Enumerated(EnumType.STRING)
+    private Pays originePays;
     private LocalDate dateCreation;
 
     @JsonIgnore

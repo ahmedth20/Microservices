@@ -34,6 +34,9 @@ public class CategorieService {
         if (existingCategorie.isPresent()) {
             Categorie categorie = existingCategorie.get();
             categorie.setNom(updatedCategorie.getNom()); // Mettre à jour le nom
+            categorie.setDescription(updatedCategorie.getDescription());
+            categorie.setDateCreation(updatedCategorie.getDateCreation());
+            categorie.setOriginePays(updatedCategorie.getOriginePays());
             return categorieRepository.save(categorie);
         }
         return null;

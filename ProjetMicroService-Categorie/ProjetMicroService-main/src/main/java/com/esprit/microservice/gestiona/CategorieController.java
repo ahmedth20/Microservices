@@ -53,8 +53,8 @@ public class CategorieController {
         return deleted ? ResponseEntity.ok("Catégorie supprimée avec succès.") : ResponseEntity.notFound().build();
     }
     @GetMapping("/pays/{pays}")
-    public ResponseEntity<List<Categorie>> getCategoriesByPays(@PathVariable String pays) {
-        List<Categorie> result = categorieService.findByOriginePays(pays);
+    public ResponseEntity<List<Categorie>> getCategoriesByPays(@PathVariable String originePays) {
+        List<Categorie> result = categorieService.findByOriginePays(originePays);
         return ResponseEntity.ok(result);
     }
     @GetMapping("/export/csv")
