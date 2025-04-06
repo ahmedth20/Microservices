@@ -52,7 +52,7 @@ public class CategorieController {
         boolean deleted = categorieService.deleteCategorie(id);
         return deleted ? ResponseEntity.ok("Catégorie supprimée avec succès.") : ResponseEntity.notFound().build();
     }
-    @GetMapping("/pays/{pays}")
+    @GetMapping("/pays/{originePays}")
     public ResponseEntity<List<Categorie>> getCategoriesByPays(@PathVariable String originePays) {
         List<Categorie> result = categorieService.findByOriginePays(originePays);
         return ResponseEntity.ok(result);

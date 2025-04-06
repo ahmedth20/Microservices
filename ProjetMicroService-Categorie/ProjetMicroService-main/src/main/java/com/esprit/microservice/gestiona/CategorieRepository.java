@@ -6,6 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategorieRepository extends JpaRepository<Categorie,Long> {
-    List<Categorie> findByOriginePays(String originePays);
+    List<Categorie> findByOriginePays(Pays originePays);
 
 }
