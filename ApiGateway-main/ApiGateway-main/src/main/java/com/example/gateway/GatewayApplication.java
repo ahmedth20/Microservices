@@ -19,7 +19,7 @@ public class GatewayApplication {
 
         return builder.routes()
                 .route("Gestion", r->r.path("/**")
-                        .uri("http://localhost:9090"))
+                        .uri("http://gestionA_ms:9090"))
                 .build();
     }
 }
