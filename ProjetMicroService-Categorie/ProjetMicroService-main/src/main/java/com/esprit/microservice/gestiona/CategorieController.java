@@ -75,6 +75,7 @@ public class CategorieController {
     public ResponseEntity<Long> getTotalCategories() {
         return ResponseEntity.ok(categorieService.countCategories());
     }
+
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
@@ -90,6 +91,13 @@ public class CategorieController {
         RestTemplate restTemplate = new RestTemplate();
         String img = restTemplate.getForObject("https://dog.ceo/api/breeds/image/random", String.class);
         return ResponseEntity.ok(img);
+    }
+    @GetMapping("/api/paysinfo/{country}")
+    public ResponseEntity<String> getCountryInfo(@PathVariable String country) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "https://restcountries.com/v3.1/name/" + country;
+        String result = restTemplate.getForObject(url, String.class);
+        return ResponseEntity.ok(result);
     }
 
 

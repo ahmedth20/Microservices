@@ -57,11 +57,12 @@ public class CategorieService {
     }
     public List<Categorie> findByOriginePays(String originePaysString) {
         try {
-            Pays originePays = Pays.valueOf(originePaysString.toUpperCase()); // S'assurer que le format est correct
+            // Convertir la chaîne en l'énumération Pays
+            Pays originePays = Pays.valueOf(originePaysString.toUpperCase()); // Cas insensible
             return categorieRepository.findByOriginePays(originePays);
         } catch (IllegalArgumentException e) {
             // Gérer l'erreur si le pays ne correspond à aucun enum
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Pays: " + originePaysString);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Le pays \"" + originePaysString + "\" n'existe pas.");
         }
     }
 

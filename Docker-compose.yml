@@ -4,7 +4,7 @@ services:
   # Eureka Server
   eurekaserver:
     build:
-      context: ./eurkaServer-main  # Chemin relatif
+      context: ./eurkaServer-main/eurkaServer-main
     ports:
       - "8761:8761"
     image: "eurekaimage"
@@ -16,7 +16,7 @@ services:
   # GestionA Microservice
   gestionA_ms:
     build:
-      context: ./ProjetMicroService-Categorie/ProjetMicroService-main  # Chemin relatif pour ton projet
+      context: ./ProjetMicroService-Categorie/ProjetMicroService-main # Chemin relatif pour ton projet
     ports:
       - "9090:9090"
     image: "gestionaimage"

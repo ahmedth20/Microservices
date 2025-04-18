@@ -18,8 +18,8 @@ public class GatewayApplication {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder){
 
         return builder.routes()
-                .route("Gestion", r->r.path("/gestionA/**")
-                        .uri("http://localhost:8081"))
+                .route("Gestion", r->r.path("/**")
+                        .uri("http://localhost:9090"))
                 .build();
     }
 }
