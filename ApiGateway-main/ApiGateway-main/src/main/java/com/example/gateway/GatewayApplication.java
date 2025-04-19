@@ -15,12 +15,14 @@ public class GatewayApplication {
         SpringApplication.run(GatewayApplication.class, args);
     }
     @Bean
-    public RouteLocator gatewayRoutes(RouteLocatorBuilder builder){
-
+    public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("Gestion", r->r.path("/**")
-                        .uri("http://gestionA_ms:9090"))
+                .route("Gestion", r -> r.path("/categories/**")
+                        .filters(f -> f.stripPrefix(1))
+                        .uri("lb://gestionA"))
                 .build();
     }
+
+
 }
 

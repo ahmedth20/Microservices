@@ -6,50 +6,53 @@ services:
     build:
       context: ./eurkaServer-main/eurkaServer-main
     ports:
-      - "8761:8761"
+      - "8762:8761"  # External port 8762 mapped to internal port 8761
     image: "eurekaimage"
+    hostname: eurekaserver
     environment:
       - eureka.client.service-url.defaultZone=http://eurekaserver:8761/eureka
     networks:
       - eureka-network
 
   # GestionA Microservice
-  gestionA_ms:
+  gestionAms:
     build:
-      context: ./ProjetMicroService-Categorie/ProjetMicroService-main # Chemin relatif pour ton projet
+      context: ./ProjetMicroService-Categorie/ProjetMicroService-main
     ports:
-      - "9090:9090"
+      - "9091:9090"  # External port 9091 mapped to internal port 9090
     image: "gestionaimage"
     environment:
       - spring.application.name=gestionA
       - spring.datasource.username=Slouma
-      - spring.datasource.password= # Si pas de mot de passe, laisse vide
+      - spring.datasource.password=
       - spring.datasource.url=jdbc:h2:file:./Database/Data/ProjetMicro
       - spring.datasource.driver-class-name=org.h2.Driver
       - spring.jpa.hibernate.ddl-auto=update
-      - server.port=9090
+      - server.port=9090  # Internal port should remain 9090
       - eureka.client.service-url.defaultZone=http://eurekaserver:8761/eureka
     depends_on:
       - eurekaserver
     networks:
       - eureka-network
     volumes:
-      - ./Database:/app/Database  # Utilisation de volumes pour persister la base de données
+      - ./Database:/app/Database
 
   # API Gateway Microservice
-  gateway_ms:
+  gatewayms:
     build:
-      context: ./ApiGateway-main/ApiGateway-main  # Chemin relatif
+      context: ./ApiGateway-main/ApiGateway-main
     ports:
-      - "7000:7000"
+      - "7001:7000"  # External port 7001 mapped to internal port 7000
     image: "gatewayimage"
     environment:
       - eureka.client.service-url.defaultZone=http://eurekaserver:8761/eureka
+      - GESTIONA_URL=http://gestionAms:9090  # Use the internal port 9090
     depends_on:
-      - eurekaserver
-      - gestionA_ms
+      - eurekaserver  # Ensure Eureka starts before the Gateway
     networks:
       - eureka-network
+    restart: always
+    command: ["/bin/sh", "-c", "wait-for-it.sh eurekaserver:8761 -- java -jar /app/gateway.jar"]
 
 networks:
   eureka-network:
